@@ -16,7 +16,7 @@ class gui:
 
     def generate_and_show_gui(self):
         with st.sidebar:
-            st.markdown("<h1 style='text-align: center;'>🧭</h1>", unsafe_allow_html=True)
+            st.markdown("<h1 style='text-align: center;font-size:100px;'>🧭</h1>", unsafe_allow_html=True)
             st.markdown("<h1 style='text-align: center;'>EleNa: Elevation Based Navigation System</h1>", unsafe_allow_html=True)
 
             BASEMAPS = self.config['BASEMAPS']
