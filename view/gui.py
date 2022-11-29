@@ -25,8 +25,8 @@ class gui:
             
             transport = st.selectbox("Choose transport", self.config['TRAVEL_MODE'])
             
-            address_from = st.text_input("Go from", key="go_from")
-            address_to = st.text_input("Go to", key="go_to")
+            self.address_from = st.text_input("Go from", key="go_from")
+            self.address_to = st.text_input("Go to", key="go_to")
     
             st.markdown("<h3 style='text-align: center;'>Tolerance</h3>", unsafe_allow_html=True)
             tolerance = st.slider('Select tolerance for elevation', min_value = 1.0, max_value = 5.0)
@@ -44,5 +44,12 @@ class gui:
         m.to_streamlit()
         
     def get_directions(self):
-        #if (address_from != address_to):
-        pass
+        if (self.address_from != "" and self.address_to != ""):
+            if (self.address_from != self.address_to):
+                st.write("Valid Source and Destination!")
+            else:
+                st.write("Invalid Source and Destination!")
+        else:
+            st.write("Invalid Source and Destination!")
+
+
