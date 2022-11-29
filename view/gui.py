@@ -38,5 +38,11 @@ class gui:
             with col2:
                 st.button("Get Directions", on_click=get_directions)
         
-    def get_directions():
+        lat, lon = 42.4529, -72.5653
+        m = leafmap.Map(center=(lat, lon), zoom=16)
+        m.add_basemap(basemap)
+        m.to_streamlit()
+        
+    def get_directions(self):
+        #if (address_from != address_to):
         pass
