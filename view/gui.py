@@ -19,15 +19,11 @@ class gui:
             st.markdown("<h1 style='text-align: center;font-size:100px;'>🧭</h1>", unsafe_allow_html=True)
             st.markdown("<h1 style='text-align: center;'>EleNa: Elevation Based Navigation System</h1>", unsafe_allow_html=True)
 
-            BASEMAPS = self.config['BASEMAPS']
-            TRAVEL_MODE = self.config['TRAVEL_MODE']
-            ADDRESS_DEFAULT = self.config['ADDRESS_DEFAULT']
-
-            basemap = st.selectbox("Select Map Type", BASEMAPS)
-            if basemap in BASEMAPS[:-1]:
+            basemap = st.selectbox("Select Map Type", self.config['BASEMAPS'])
+            if basemap in self.config['BASEMAPS'][:-1]:
                 basemap=basemap.upper()
             
-            transport = st.selectbox("Choose transport", TRAVEL_MODE)
+            transport = st.selectbox("Choose transport", self.config['TRAVEL_MODE'])
             
             address_from = st.text_input("Go from", key="go_from")
             address_to = st.text_input("Go to", key="go_to")
