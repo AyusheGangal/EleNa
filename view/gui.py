@@ -4,6 +4,7 @@ import osmnx
 import networkx as nx
 import leafmap.foliumap as leafmap
 import json
+from navigator_demo import *
 
 
 class elena_gui:
@@ -37,6 +38,7 @@ class elena_gui:
         self.map.add_basemap(self.basemap)
 
 
+
     def generate_and_show_gui(self) -> None:
         """
         Generate and shows GUI for the app
@@ -49,8 +51,8 @@ class elena_gui:
 
             with st.form("Navigation Form"):
                 self.transport = st.selectbox("Method of Transportation", self.config['TRAVEL_MODE'])
-                self.address_from = st.text_input("Go from", key="go_from")
-                self.address_to = st.text_input("Go to", key="go_to")
+                self.address_from = st.text_input("From", key="go_from")
+                self.address_to = st.text_input("To", key="go_to")
                 self.tolerance = st.slider(label="tolerance", min_value=1.0, max_value=5.0,
                                            label_visibility="collapsed", step=0.1,
                                            format="%f times")
@@ -63,8 +65,13 @@ class elena_gui:
                 if submitted:
                     self.get_directions()
 
-        self.map.to_streamlit()
 
+        self.basemap = st.selectbox("Choose Map Type", self.config['BASEMAPS'])
+        if self.basemap in self.config['BASEMAPS'][1:]:
+            self.basemap = self.basemap.upper()
+        self.map.add_basemap(self.basemap)
+
+        self.map.to_streamlit()
 
     def get_directions(self) -> None:
         """
@@ -74,16 +81,22 @@ class elena_gui:
 
         2. Sends request to backend for route generation
 
-        3.
+        3. Updates map on the screen with the path
         :return:
         """
         if self.address_from == "" or self.address_to == "" or self.address_from == self.address_to:
             st.warning(" Invalid Source or Destination!", icon="⚠️")
         else:
             with st.spinner("Generating shortest route"):
-                import time
-                time.sleep(1)
+                graph = get_graph()
+                paths, location_orig, location_dest = get_shortest_path(self.address_from, self.address_to, graph)
 
                 # TODO: Add function for getting shortest path
-            self.map.set_center(13,23)
+            self.map.add_marker(location=list(location_orig),
+                                icon=folium.Icon(color='green', icon='map-pin', prefix='fa-solid'),
+                                tooltip=self.address_from)
+            self.map.add_marker(location=list(location_dest),
+                                icon=folium.Icon(color='red', icon='map-pin', prefix='fa-solid'),
+                                tooltip=self.address_to)
+            osmnx.plot_route_folium(graph, paths, self.map)
             st.success('Shortest route found', icon="✅")
