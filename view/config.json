@@ -1,0 +1,5 @@
+{
+    "BASEMAPS": ["OpenStreetMap","Satellite", "Roadmap", "Terrain", "Hybrid"],
+    "TRAVEL_MODE": ["Walk", "Bike"],
+    "DEFAULT_LAT_LONG": [42.4529, -72.5653]
+}
