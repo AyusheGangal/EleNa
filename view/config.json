@@ -1,5 +1,5 @@
 {
-    "BASEMAPS": ["Satellite", "Roadmap", "Terrain", "Hybrid", "OpenStreetMap"],
+    "BASEMAPS": ["OpenStreetMap","Satellite", "Roadmap", "Terrain", "Hybrid"],
     "TRAVEL_MODE": ["Walk", "Bike"],
     "ADDRESS_DEFAULT": "Grand Place, Bruxelles"
 }
