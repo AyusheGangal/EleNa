@@ -5,13 +5,11 @@ from time import sleep
 import pickle
 import osmnx as ox
 import networkx as nx
-
+import os
 
 def download_graph(city, state, transport_mode):
-    with open("./config.json") as f:
-        config = json.load(f)
 
-    api_hostname = config["API_ADDRESS"]
+    api_hostname = os.environ.get("API_ADDRESS")
 
     url = f"{api_hostname}/download_graph"
     data = {'city': city, 'state': state, 'transport_mode': transport_mode}
@@ -30,7 +28,6 @@ def download_graph(city, state, transport_mode):
         poll_limit += 1
         sleep(0.5)
 
-    print(cache_path)
     if os.path.exists(cache_path):
         with open(cache_path, "rb") as f:
             elevation_graded_graph = pickle.load(f)
@@ -41,10 +38,7 @@ def download_graph(city, state, transport_mode):
 
 
 def get_shortest_path(from_address, to_address, city, state, transport_mode, tolerance):
-    with open("./config.json") as f:
-        config = json.load(f)
-
-    api_hostname = config["API_ADDRESS"]
+    api_hostname = os.environ.get("API_ADDRESS")
 
     url = f"{api_hostname}/get_shortest_path"
     data = {'city': city, 'state': state, 'transport_mode': transport_mode, "from_address": from_address,
