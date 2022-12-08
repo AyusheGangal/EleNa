@@ -22,7 +22,8 @@ class MapGraph:
         self.penalization_function = cost_functions_map[penalization_function]
         if not os.path.exists(self.cache_path):
             os.makedirs(self.cache_path)
-        self.graph = self.get_graph()
+
+        self.graph = self.prepare_graph()
 
     def get_cached_graph_path(self) -> str:
         cache_file_name = f'{self.city.lower()}_{self.state.lower()}_{self.transport_mode.lower()}_eleGraded.map'
