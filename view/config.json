@@ -1,5 +1,6 @@
 {
     "BASEMAPS": ["OpenStreetMap","Satellite", "Roadmap", "Terrain", "Hybrid"],
     "TRAVEL_MODE": ["Walk", "Bike"],
-    "DEFAULT_LAT_LONG": [42.4529, -72.5653]
+    "DEFAULT_LAT_LONG": [42.4529, -72.5653],
+    "API_ADDRESS": "http://127.0.0.1:7007"
 }
