@@ -8,6 +8,8 @@ services:
       - type: volume
         source: shared_volume
         target: /shared_volume
+    ports:
+      - "127.0.0.1:5100:80"
 
   worker:
     build: ./worker
@@ -16,8 +18,16 @@ services:
       - type: volume
         source: shared_volume
         target: /shared_volume
-    ports:
-      - "127.0.0.1:5100:9999"
+    restart: always
+
+  nginx:
+    build:
+      context: ./load_balancer
+      dockerfile: Dockerfile
+    depends_on:
+      - view
+      - worker
+    restart: always
 
 
 volumes:

@@ -5,5 +5,5 @@ WORKDIR /code
 COPY . .
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
-
+ENV API_ADDRESS=http://cs520_elena_map-nginx-1:5100
 
