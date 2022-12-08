@@ -1,0 +1,6 @@
+flask==2.2.2
+gunicorn==20.1.0
+osmnx==1.2.2
+networkx==2.8.7
+leafmap==0.10.5
+streamlit==1.14.0
