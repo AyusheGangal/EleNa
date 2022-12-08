@@ -53,7 +53,11 @@ class Navigator:
         shortest_paths_by_elevation_lengths = sorted(shortest_paths_by_elevation_lengths, key=lambda x: x[0])
         return shortest_paths_by_elevation_lengths, shortest_path_by_distance, location_orig, location_dest
 
-    def filter_paths_by_tolerance(self, graph, elevation_based_paths, shortest_path, tolerance):
+    def filter_paths_by_tolerance(self, graph, all_shortest_path_data, tolerance):
+        shortest_path = all_shortest_path_data[1]
+        elevation_based_paths = all_shortest_path_data[0]
+        location_orig = all_shortest_path_data[2]
+        location_dest = all_shortest_path_data[3]
         shortest_path_length = sum(ox.utils_graph.get_route_edge_attributes(graph, shortest_path, 'length'))
         shortest_path_elevation_gain = 0
 
@@ -81,7 +85,9 @@ class Navigator:
             "original_elevation_gain": shortest_path_elevation_gain,
             "elevation_reduction": elevation_reduction,
             "original_path_length": shortest_path_length,
-            "path_length_increase": path_length_increase
+            "path_length_increase": path_length_increase,
+            "location_orig": location_orig,
+            "location_dest": location_dest
         }
 
         return output_dict

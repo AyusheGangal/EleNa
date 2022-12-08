@@ -2,7 +2,7 @@ import os
 import pickle
 import osmnx as ox
 from typing import Optional, Tuple
-from cost_functions import *
+from navigator.cost_functions import *
 from networkx.classes.multidigraph import MultiDiGraph
 
 
@@ -14,6 +14,7 @@ class MapGraph:
         if city in self.INVALID_VALUES or state in self.INVALID_VALUES or transport_mode in self.INVALID_VALUES:
             raise ValueError(f"City, state and transport mode values cannot be {self.INVALID_VALUES}. Expected str")
 
+        ox.config(use_cache=False)
         self.city = city
         self.state = state
         self.transport_mode = transport_mode
@@ -23,7 +24,8 @@ class MapGraph:
         if not os.path.exists(self.cache_path):
             os.makedirs(self.cache_path)
 
-        self.graph = self.prepare_graph()
+        self.graph = None
+
 
     def get_cached_graph_path(self) -> str:
         cache_file_name = f'{self.city.lower()}_{self.state.lower()}_{self.transport_mode.lower()}_eleGraded.map'
@@ -55,7 +57,7 @@ class MapGraph:
             elevation_graded_graph = self.add_elevation_grading(graph)
             self.save_graph(elevation_graded_graph, cached_graph_path)
 
-        return elevation_graded_graph
+        self.graph = elevation_graded_graph
 
     def get_graph(self):
         return self.graph
