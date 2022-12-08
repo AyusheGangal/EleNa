@@ -4,7 +4,8 @@ import osmnx
 import networkx as nx
 import leafmap.foliumap as leafmap
 import json
-from navigator_demo import *
+from request_makers import *
+import pickle
 
 
 class elena_gui:
@@ -37,8 +38,6 @@ class elena_gui:
         self.map = leafmap.Map(center=(lat, lon), zoom=16)
         self.map.add_basemap(self.basemap)
 
-
-
     def generate_and_show_gui(self) -> None:
         """
         Generate and shows GUI for the app
@@ -65,7 +64,6 @@ class elena_gui:
                 if submitted:
                     self.get_directions()
 
-
         self.basemap = st.selectbox("Choose Map Type", self.config['BASEMAPS'])
         if self.basemap in self.config['BASEMAPS'][1:]:
             self.basemap = self.basemap.upper()
@@ -84,19 +82,37 @@ class elena_gui:
         3. Updates map on the screen with the path
         :return:
         """
-        if self.address_from == "" or self.address_to == "" or self.address_from == self.address_to:
+
+        if len(self.address_to.split(",")) < 3 or len(self.address_to.split(",")) < 3:
             st.warning(" Invalid Source or Destination!", icon="⚠️")
         else:
-            with st.spinner("Generating shortest route"):
-                graph = get_graph()
-                paths, location_orig, location_dest = get_shortest_path(self.address_from, self.address_to, graph)
+            to_city = self.address_to.split(",")[-2].strip().capitalize()
+            to_state = self.address_to.split(",")[-1].strip().upper()
 
-                # TODO: Add function for getting shortest path
-            self.map.add_marker(location=list(location_orig),
-                                icon=folium.Icon(color='green', icon='map-pin', prefix='fa-solid'),
-                                tooltip=self.address_from)
-            self.map.add_marker(location=list(location_dest),
-                                icon=folium.Icon(color='red', icon='map-pin', prefix='fa-solid'),
-                                tooltip=self.address_to)
-            osmnx.plot_route_folium(graph, paths, self.map)
-            st.success('Shortest route found', icon="✅")
+            from_city = self.address_from.split(",")[-2].strip().capitalize()
+            from_state = self.address_from.split(",")[-1].strip().upper()
+
+            if self.address_from == "" or self.address_to == "" or self.address_from == self.address_to:
+                st.warning(" Invalid Source or Destination!", icon="⚠️")
+            elif to_city != from_city or to_state != from_state:
+                st.warning(" Source and Destination must be in the same city!", icon="⚠️")
+            else:
+                with st.spinner("Generating shortest route"):
+
+                    graph = download_graph(from_city, from_state, self.transport.lower())
+                    output_data = get_shortest_path(self.address_from, self.address_to,
+                                                                            from_city, from_state,
+                                                                            self.transport.lower(), self.tolerance)
+
+                self.map.add_marker(location=list(output_data["location_orig"]),
+                                    icon=folium.Icon(color='green', icon='map-pin', prefix='fa-solid'),
+                                    tooltip=self.address_from)
+                self.map.add_marker(location=list(output_data["location_dest"]),
+                                    icon=folium.Icon(color='red', icon='map-pin', prefix='fa-solid'),
+                                    tooltip=self.address_to)
+                osmnx.plot_route_folium(graph, output_data["path"], self.map)
+
+                if output_data["found"]:
+                    st.success(f"Shortest elevation-based route found matching your requirements. \n It has {output_data['elevation_reduction']:.2f}% lesser elevation gain and {output_data['path_length_increase']:.2f}% longer than the shortest path", icon="✅")
+                else:
+                    st.warning(f"Shortest elevation-based route not found matching your requirements. This closest path has {output_data['elevation_reduction']:.2f}% lesser elevation gain and {output_data['path_length_increase']:.2f}% longer than the shortest path", icon="😔")
