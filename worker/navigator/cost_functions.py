@@ -1,5 +1,8 @@
 def linear_squared_cost(length, grade):
-    return (length + 1000 * grade) ** 2
+    if grade > 0:
+        return length + (100*grade)**2
+    else:
+        return length + grade
 
 
 cost_functions_map = {

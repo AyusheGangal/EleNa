@@ -8,31 +8,19 @@ import pickle
 import os
 from typing import Optional, Tuple
 
-with open("map", "wb") as f:
-    pickle.dump(graph, f)
-
 
 class Navigator:
 
-    def __init__(self, config_file: str):
-
-        try:
-            with open(config_file) as f:
-                self.config = json.load(f)
-        except FileNotFoundError:
-            print("File not found")  # Replace with logger
-            sys.exit(1)
-
+    def __init__(self):
         self.INVALID_VALUES = ["", None]
 
-    def get_address_coordinates(address: str) -> (float, float):
+    def get_address_coordinates(self, address: str):
         address_locator = Nominatim(user_agent="ELeNa")
         location = address_locator.geocode(address)
 
         return location.latitude, location.longitude
 
-    def get_navigation_coordinates(self, from_address: str, to_address: str) -> Optional[
-        Tuple[(float, float), (float, float)]]:
+    def get_navigation_coordinates(self, from_address: str, to_address: str):
 
         if from_address in self.INVALID_VALUES or to_address in self.INVALID_VALUES:
             print("Invalid values")
@@ -54,7 +42,7 @@ class Navigator:
         location_orig, location_dest = self.get_navigation_coordinates(from_address, to_address)
         from_node = ox.nearest_nodes(graph, location_orig[1], location_orig[0])
         to_node = ox.nearest_nodes(graph, location_dest[1], location_dest[0])
-        shortest_paths_by_elevation = list(nx.all_shortest_paths(graph, from_node, to_node, weight=weight))
+        shortest_paths_by_elevation = nx.all_shortest_paths(graph, from_node, to_node, weight=weight)
         shortest_path_by_distance = nx.shortest_path(graph, from_node, to_node, weight="length")
         shortest_paths_by_elevation_lengths = []
 
@@ -85,12 +73,14 @@ class Navigator:
                 shortest_path_elevation_based_elevation_gain += ele_gain
 
         elevation_reduction = 100 * ((shortest_path_elevation_gain - shortest_path_elevation_based_elevation_gain) / shortest_path_elevation_gain)
-        path_length_increase = 100 * ((shortest_path_elevation_based[0][0] - shortest_path_length) / shortest_path_length)
+        path_length_increase = 100 * ((elevation_based_paths[0][0] - shortest_path_length) / shortest_path_length)
 
         output_dict = {
             "found": path_found,
             "path": shortest_path_elevation_based,
+            "original_elevation_gain": shortest_path_elevation_gain,
             "elevation_reduction": elevation_reduction,
+            "original_path_length": shortest_path_length,
             "path_length_increase": path_length_increase
         }
 

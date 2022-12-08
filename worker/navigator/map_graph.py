@@ -49,13 +49,13 @@ class MapGraph:
         cached_graph_path = self.get_cached_graph_path()
         if os.path.exists(cached_graph_path):
             with open(cached_graph_path, "rb") as f:
-                graph = pickle.load(f)
+                elevation_graded_graph = pickle.load(f)
         else:
             graph = self.download_graph()
-            graph = self.add_elevation_grading(graph)
-            self.save_graph(graph, cached_graph_path)
+            elevation_graded_graph = self.add_elevation_grading(graph)
+            self.save_graph(elevation_graded_graph, cached_graph_path)
 
-        return graph
+        return elevation_graded_graph
 
     def get_graph(self):
         return self.graph
