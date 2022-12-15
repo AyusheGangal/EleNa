@@ -6,6 +6,7 @@ import pickle
 import osmnx as ox
 import networkx as nx
 import os
+from logger import logger
 
 def download_graph(city, state, transport_mode):
 
@@ -18,6 +19,7 @@ def download_graph(city, state, transport_mode):
 
     if r.status_code == 200:
         cache_path = str(r.text)
+        logger.info(cache_path)
     else:
         raise TimeoutError("Cannot get the graph. Try again.")
 
