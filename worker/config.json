@@ -1,5 +1,5 @@
 {
-  "cache_path": "/Users/mudit/Work/520/Final_project/map_caches",
+  "cache_path": "/shared_volume/cache",
   "penalization_function": "linear_squared_cost",
   "apikey": "SECRET"
 }
