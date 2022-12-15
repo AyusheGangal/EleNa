@@ -29,6 +29,18 @@ services:
       - worker
     restart: always
 
+  lru_cleaner:
+    build:
+      context: ./lru_cacher
+    command: bash -c "touch /shared_volume/cron.log ; cron && tail -f /shared_volume/cron.log"
+    depends_on:
+      - view
+      - worker
+    volumes:
+      - type: volume
+        source: shared_volume
+        target: /shared_volume
+    restart: always
 
 volumes:
   shared_volume:

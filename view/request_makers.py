@@ -8,8 +8,8 @@ import networkx as nx
 import os
 from logger import logger
 
-def download_graph(city, state, transport_mode):
 
+def download_graph(city, state, transport_mode):
     api_hostname = os.environ.get("API_ADDRESS")
 
     url = f"{api_hostname}/download_graph"
@@ -25,14 +25,18 @@ def download_graph(city, state, transport_mode):
 
     poll_limit = 0
     while (not os.path.exists(cache_path)):
-        if poll_limit > 500:
+        if poll_limit > 5000:
             raise TimeoutError("Cannot get the graph. Try again.")
         poll_limit += 1
         sleep(0.5)
 
+    sleep(1)  # Sometimes, it takes time for file system to update
     if os.path.exists(cache_path):
-        with open(cache_path, "rb") as f:
-            elevation_graded_graph = pickle.load(f)
+        try:
+            with open(cache_path, "rb") as f:
+                elevation_graded_graph = pickle.load(f)
+        except:
+            raise FileNotFoundError("Cannot get the graph. Try again.")
     else:
         raise TimeoutError("Cannot get the graph. Try again.")
 

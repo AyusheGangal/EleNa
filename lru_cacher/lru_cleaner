@@ -1,3 +1,2 @@
-* * * * * python lru_cache.py; currentDate=`date`; echo "LRU cache cleaned at $currentDate" >> /shared_volume/cron.log 2>&1
-# 0 0 * * * python lru_cache.py; currentDate=`date`; echo "LRU cache cleaned at $currentDate" >> /shared_volume/cron.log 2>&1
+0 0 * * * python lru_cache.py; currentDate=`date`; echo "LRU cache cleaned at $currentDate" >> /shared_volume/cron.log 2>&1
 # Don't remove this line. It is required for cron job to run.
