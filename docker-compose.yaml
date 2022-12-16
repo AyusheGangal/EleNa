@@ -10,6 +10,7 @@ services:
         target: /shared_volume
     depends_on:
       - worker
+      - nginx
     ports:
       - "127.0.0.1:5100:80"
 
@@ -27,7 +28,6 @@ services:
       context: ./load_balancer
       dockerfile: Dockerfile
     depends_on:
-      - view
       - worker
     restart: always
 

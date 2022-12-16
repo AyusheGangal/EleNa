@@ -10,6 +10,7 @@ services:
         target: /shared_volume
     depends_on:
       - worker
+      - nginx
     ports:
       - "127.0.0.1:5100:80"
 
@@ -24,9 +25,20 @@ services:
 
   worker_test:
     build: ./worker
-    command:  python -m unittest discover -s tests -p '*_tests.py' -v #python -m unittest -v tests/map_graph_tests.py
+    command:  python -m unittest discover -s tests -p '*_tests.py' -v
     depends_on:
       - worker
+    volumes:
+      - type: volume
+        source: shared_volume
+        target: /shared_volume
+
+  view_test:
+    build: ./view
+    command: python -m unittest discover -s tests -p '*_tests.py' -v
+    depends_on:
+      - worker
+      - nginx
     volumes:
       - type: volume
         source: shared_volume
@@ -37,11 +49,10 @@ services:
       context: ./load_balancer
       dockerfile: Dockerfile
     depends_on:
-      - view
       - worker
     restart: always
 
-  lru_cleaner_test:
+  lru_cleaner:
     build:
       context: ./lru_cacher
     command: bash -c "touch /shared_volume/cron.log ; cron && tail -f /shared_volume/cron.log"
