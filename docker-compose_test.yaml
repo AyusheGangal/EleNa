@@ -23,6 +23,27 @@ services:
         target: /shared_volume
     restart: always
 
+  worker_test:
+    build: ./worker
+    command:  python -m unittest discover -s tests -p '*_tests.py' -v
+    depends_on:
+      - worker
+    volumes:
+      - type: volume
+        source: shared_volume
+        target: /shared_volume
+
+  view_test:
+    build: ./view
+    command: python -m unittest discover -s tests -p '*_tests.py' -v
+    depends_on:
+      - worker
+      - nginx
+    volumes:
+      - type: volume
+        source: shared_volume
+        target: /shared_volume
+
   nginx:
     build:
       context: ./load_balancer
