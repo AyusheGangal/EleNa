@@ -1,3 +1,6 @@
+"""
+Flask API launcher
+"""
 from flask import Flask, request
 import worker_funcs
 

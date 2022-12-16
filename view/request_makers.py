@@ -1,3 +1,6 @@
+"""
+Defines functions to send HTTP requests to the worker
+"""
 import requests
 import json
 import os
@@ -9,7 +12,15 @@ import os
 from logger import logger
 
 
-def download_graph(city, state, transport_mode):
+def download_graph(city: str, state: str, transport_mode: str):
+    """
+    Send HTTP request to the worker to download a graph
+
+    :param city: City for which to download the graph
+    :param state: State for which to download the graph
+    :param transport_mode: Transport mode (walk, bike)
+    :return: Elevation graded MultiDiGraph
+    """
     api_hostname = os.environ.get("API_ADDRESS")
 
     url = f"{api_hostname}/download_graph"
@@ -43,7 +54,18 @@ def download_graph(city, state, transport_mode):
     return elevation_graded_graph
 
 
-def get_shortest_path(from_address, to_address, city, state, transport_mode, tolerance):
+def get_shortest_path(from_address: str, to_address: str, city: str, state: str, transport_mode: str, tolerance: float):
+    """
+    Sends HTTP request to the worker to get the shortest elevation based path with statistics.
+
+    :param from_address: Origin address
+    :param to_address: Destination address
+    :param city: City for which to download the graph
+    :param state: State for which to download the graph
+    :param transport_mode: Transport mode (walk, bike)
+    :param tolerance: Tolerance for the shortest elevation based path
+    :return: Dictionary with shortest path and statistics to display
+    """
     api_hostname = os.environ.get("API_ADDRESS")
 
     url = f"{api_hostname}/get_shortest_path"

@@ -1,3 +1,6 @@
+"""
+Defines logger and logger config
+"""
 import logging
 import json
 

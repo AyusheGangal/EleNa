@@ -1,6 +1,12 @@
-def linear_squared_cost(length, grade):
+"""
+Defines the cost functions. Can be extended.
+
+"""
+
+
+def linear_squared_cost(length: float, grade: float):
     if grade > 0:
-        return length + (100*grade)**2
+        return length + (100 * grade) ** 2
     else:
         return length + grade
 

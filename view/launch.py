@@ -1,3 +1,6 @@
+"""
+GUI launcher
+"""
 from gui import elena_gui
 
 if __name__ == "__main__":
