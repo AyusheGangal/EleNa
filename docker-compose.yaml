@@ -8,6 +8,8 @@ services:
       - type: volume
         source: shared_volume
         target: /shared_volume
+    depends_on:
+      - worker
     ports:
       - "127.0.0.1:5100:80"
 
