@@ -1,3 +1,6 @@
+"""
+Defines GUI for the web app
+"""
 import streamlit as st
 import folium
 import osmnx

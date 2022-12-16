@@ -7,7 +7,10 @@ import warnings
 warnings.filterwarnings("ignore")
 
 
-class NavigatorTests(unittest.TestCase):
+class ViewTests(unittest.TestCase):
+    """
+    Defines test for the view related functions for making HTTP requests
+    """
 
     def setUp(self):
         self.city = "Amherst"

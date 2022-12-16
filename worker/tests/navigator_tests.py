@@ -9,6 +9,9 @@ warnings.filterwarnings("ignore")
 
 
 class NavigatorTests(unittest.TestCase):
+    """
+    Tests for navigator
+    """
 
     def setUp(self) -> None:
         with open("./config.json") as f:

@@ -6,6 +6,9 @@ import warnings
 warnings.filterwarnings("ignore")
 
 class MapGraphTests(unittest.TestCase):
+    """
+    Tests for MapGraph
+    """
 
     def setUp(self) -> None:
         with open("./config.json") as f:

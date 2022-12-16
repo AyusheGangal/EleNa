@@ -1,3 +1,7 @@
+"""
+Functions for API calls
+
+"""
 from navigator.map_graph import MapGraph
 from navigator.navigator import Navigator
 from flask import request, after_this_request, Response, jsonify
@@ -9,6 +13,10 @@ with open("./config.json") as f:
 
 
 def download_graph():
+    """
+    Downloads a graph based on the HTTP request and returns the save path
+    :return: save path of the downloaded graph
+    """
     data = request.get_json()
     city = data["city"]
     state = data["state"]
@@ -37,6 +45,10 @@ def download_graph():
 
 
 def get_shortest_path():
+    """
+    Returns elevation based shortest path on HTTP request
+    :return: JSON with shortest path and statistics for display
+    """
     data = request.get_json()
     from_address = data["from_address"]
     to_address = data["to_address"]
@@ -59,4 +71,3 @@ def get_shortest_path():
     path_and_stats = navigator_worker.filter_paths_by_tolerance(graph, all_shortest_paths_data, tolerance)
 
     return jsonify(path_and_stats), 200
-
