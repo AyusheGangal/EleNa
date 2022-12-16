@@ -23,7 +23,6 @@ class Navigator:
     def get_navigation_coordinates(self, from_address: str, to_address: str):
 
         if from_address in self.INVALID_VALUES or to_address in self.INVALID_VALUES:
-            print("Invalid values")
             return None
 
         from_coordinates = self.get_address_coordinates(from_address)
