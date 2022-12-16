@@ -14,7 +14,7 @@ class MapGraph:
         if city in self.INVALID_VALUES or state in self.INVALID_VALUES or transport_mode in self.INVALID_VALUES:
             raise ValueError(f"City, state and transport mode values cannot be {self.INVALID_VALUES}. Expected str")
 
-        ox.config(use_cache=False)
+        ox.settings.use_cache = False
         self.city = city
         self.state = state
         self.transport_mode = transport_mode
@@ -25,7 +25,6 @@ class MapGraph:
             os.makedirs(self.cache_path)
 
         self.graph = None
-
 
     def get_cached_graph_path(self) -> str:
         cache_file_name = f'{self.city.lower()}_{self.state.lower()}_{self.transport_mode.lower()}_eleGraded.map'

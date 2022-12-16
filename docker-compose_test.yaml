@@ -1,0 +1,58 @@
+version: "3"
+
+services:
+  view:
+    build: ./view
+    command: python -m streamlit run launch.py --server.port 80
+    volumes:
+      - type: volume
+        source: shared_volume
+        target: /shared_volume
+    depends_on:
+      - worker
+    ports:
+      - "127.0.0.1:5100:80"
+
+  worker:
+    build: ./worker
+    command: gunicorn -w 3 api:app --bind 0.0.0.0:9999 --timeout=100
+    volumes:
+      - type: volume
+        source: shared_volume
+        target: /shared_volume
+    restart: always
+
+  worker_test:
+    build: ./worker
+    command: python -m unittest -v tests/map_graph_tests.py
+    depends_on:
+      - worker
+    volumes:
+      - type: volume
+        source: shared_volume
+        target: /shared_volume
+
+  nginx:
+    build:
+      context: ./load_balancer
+      dockerfile: Dockerfile
+    depends_on:
+      - view_test
+      - worker
+    restart: always
+
+  lru_cleaner_test:
+    build:
+      context: ./lru_cacher
+    command: bash -c "touch /shared_volume/cron.log ; cron && tail -f /shared_volume/cron.log"
+    depends_on:
+      - view_test
+      - worker
+    volumes:
+      - type: volume
+        source: shared_volume
+        target: /shared_volume
+    restart: always
+
+volumes:
+  shared_volume:
