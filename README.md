@@ -1,5 +1,4 @@
 # Elevation-based Navigation System (EleNa)
-Repository for CS 520 Final Project.
 
 ## Authors:
 - Mudit Chaudhary (32607978)
